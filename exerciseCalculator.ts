@@ -8,7 +8,7 @@ interface Result {
   average: number
 }
 
-const calculateExercises = (weeklyExercises: number[], target: number): Result => {
+const calculateExercises = (target: number, weeklyExercises: number[]): Result => {
   const periodLength = weeklyExercises.length;
   const trainingDays = weeklyExercises.filter(hours => hours > 0).length;
   const totalHours = weeklyExercises.reduce((acc, hours) => acc + hours, 0);
@@ -41,4 +41,22 @@ const calculateExercises = (weeklyExercises: number[], target: number): Result =
   }
 };
 
-console.log(calculateExercises([2, 1, 3, 2, 1, 3, 2], 2));
+try {
+  const target = Number(process.argv[2]);
+  // converts the process.argv object to a proper array. 
+  // The slice() method removes the first three arguments 
+  // (the executable path (npm run), the name of the script
+  // (calculateExercises), and the target value), 
+  // and the second argument to Array.from() is a function 
+  // that maps each element to a number
+  const weeklyExercises = Array.from(process.argv.slice(3), Number);
+
+  if (isNaN(target) || weeklyExercises.some(isNaN)) {
+    throw new Error('Invalid arguments');
+  }
+
+  console.log(calculateExercises(target, weeklyExercises));
+} 
+catch (error) {
+  console.log(error.message);
+}

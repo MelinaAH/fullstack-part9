@@ -2,10 +2,13 @@ const calculateBmi = (height: number, weight: number): string => {
   const heightInCm = height / 100;
   const bmi = weight / (heightInCm * heightInCm);
 
-  if (bmi < 18.5) {
+  if (isNaN(bmi) || heightInCm === 0 || weight === 0) {
+    throw new Error('Invalid height or weight');
+  }
+  else if (bmi < 18.5) {
     return 'Underweight';
   }
-  else if (bmi > 25 ) {
+  else if (bmi > 25) {
     return 'Overweight';
   }
   else {
@@ -13,4 +16,16 @@ const calculateBmi = (height: number, weight: number): string => {
   }
 };
 
-console.log(calculateBmi(180, 74));
+try {
+  const height = Number(process.argv[2]);
+  const weight = Number(process.argv[3]);
+
+  if (isNaN(height) || isNaN(weight)) {
+    throw new Error('Invalid arguments');
+  }
+
+  console.log(calculateBmi(height, weight));
+} 
+catch (error) {
+  console.log(error.message);
+}

@@ -57,6 +57,12 @@ try {
 
   console.log(calculateExercises(target, weeklyExercises));
 } 
-catch (error) {
-  console.log(error.message);
+catch (error: unknown) {
+  let errorMessage = 'something went wrong: ';
+  
+  if (error instanceof Error) {
+    errorMessage += error.message;
+  }
+
+  console.log(errorMessage);
 }

@@ -38,7 +38,7 @@ const calculateExercises = (target: number, weeklyExercises: number[]): Result =
     ratingDescription,
     target,
     average
-  }
+  };
 };
 
 try {

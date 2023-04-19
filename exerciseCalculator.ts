@@ -8,13 +8,13 @@ interface Result {
   average: number
 }
 
-const calculateExercises = (target: number, weeklyExercises: number[]): Result => {
+export const calculateExercises = (target: number, weeklyExercises: number[]): Result => {
   const periodLength = weeklyExercises.length;
-  const trainingDays = weeklyExercises.filter(hours => hours > 0).length;
-  const totalHours = weeklyExercises.reduce((acc, hours) => acc + hours, 0);
+  const trainingDays = weeklyExercises.reduce((count, hours) => hours > 0 ? count + 1 : count, 0);
+  const totalHours = weeklyExercises.reduce((count, hours) => count + hours, 0);
   const average = totalHours / periodLength;
   const success = average >= target;
-  let rating = 1 | 2 | 3;
+  let rating = 0;
   let ratingDescription = '';
 
   if (average >= target) {
@@ -41,7 +41,8 @@ const calculateExercises = (target: number, weeklyExercises: number[]): Result =
   };
 };
 
-try {
+// // this part is needed in the exercise 9.3
+/*try {
   const target = Number(process.argv[2]);
   // converts the process.argv object to a proper array. 
   // The slice() method removes the first three arguments 
@@ -65,4 +66,4 @@ catch (error: unknown) {
   }
 
   console.log(errorMessage);
-}
+}*/

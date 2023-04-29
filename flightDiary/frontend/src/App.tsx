@@ -1,40 +1,87 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { getAllDiaryEntries, addDiaryEntry } from './services/diaryEntryService';
+import { Diary, NewDiaryEntry, Weather, Visibility } from './types';
 
-interface Diary {
-  id: number,
-  date: string,
-  weather: string,
-  visibility: string,
-  comment: string,
-}
-
-const App = () => {
+function App() {
   const [flightDiary, setFlightDiary] = useState<Diary[]>([]);
-  const [entryId, setEntryId] = useState('');
+  const [newEntry, setNewEntry] = useState<NewDiaryEntry>();
   const [date, setDate] = useState('');
-  const [weather, setWeather] = useState('');
-  const [visibility, seVisibility] = useState('');
-  const [comment, seComment] = useState('');
+  const [weather, setWeather] = useState<Weather | null>(null);
+  const [visibility, setVisibility] = useState<Visibility | null>(null);
+  const [comment, setComment] = useState('');
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/api/diaries')
-      .then(response => setFlightDiary(response.data))
+    getAllDiaryEntries().then(data => {
+      setFlightDiary(data)
+    })
   }, [flightDiary]);
+
+  const handleAddEntry = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+
+    if (weather !== null && visibility !== null) {
+      const entryToAdd: NewDiaryEntry = {
+        date: date,
+        weather: weather,
+        visibility: visibility,
+        comment: comment
+      };
+
+      setNewEntry(entryToAdd);
+
+      if (newEntry) {
+        addDiaryEntry(newEntry).then(data => {
+          setFlightDiary(flightDiary.concat(data));
+        });
+      }
+
+      setDate('');
+      setWeather(null);
+      setVisibility(null);
+      setComment('');
+    }
+  };
 
   return (
     <div>
-      <h2>Diary entries</h2>
-      {flightDiary.map(entry =>
-        <div key={entry.id}>
-          <h3>{entry.date}</h3>
-          <p>visibility: {entry.visibility}</p>
-          <p>weather: {entry.weather}</p>
-          <p>comment: {entry.comment}</p>
-        </div>
-      )}
+      <div>
+        <h2>Add new entry</h2>
+        <form onSubmit={handleAddEntry}>
+          date (yyyy-mm-dd)
+          <input
+            value={date}
+            onChange={(event) => setDate(event.target.value)}
+          /><br />
+          visibility (great, good, ok or poor)
+          <input
+            value={visibility || ''}
+            onChange={(event) => setVisibility(event.target.value as Visibility)}
+          /><br />
+          weather (sunny, rainy, cloudy, stormy or windy)
+          <input
+            value={weather || ''}
+            onChange={(event) => setWeather(event.target.value as Weather)}
+          /><br />
+          comment
+          <input
+            value={comment}
+            onChange={(event) => setComment(event.target.value)}
+          /><br />
+          <button type='submit'>add</button>
+        </form>
+      </div>
+      <div>
+        <h2>Diary entries</h2>
+        {flightDiary.map(entry =>
+          <div key={entry.id}>
+            <h3>{entry.date}</h3>
+            <p>visibility: {entry.visibility}</p>
+            <p>weather: {entry.weather}</p>
+            <p>comment: {entry.comment}</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

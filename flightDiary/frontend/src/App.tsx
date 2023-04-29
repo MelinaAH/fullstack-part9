@@ -21,7 +21,7 @@ function App() {
 
   const handleAddEntry = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-  
+
     if (weather !== null && visibility !== null) {
       const entryToAdd: NewDiaryEntry = {
         date: date,
@@ -29,9 +29,9 @@ function App() {
         visibility: visibility,
         comment: comment
       };
-  
+
       setNewEntry(entryToAdd);
-  
+
       if (!Object.values(Weather).includes(weather)) {
         setErrorMessage(`Error: Incorrect weather: ${weather}`);
         setDate('');
@@ -48,13 +48,13 @@ function App() {
         setComment('');
         return;
       }
-  
+
       try {
         if (newEntry) {
           const data = await addDiaryEntry(newEntry);
           setFlightDiary(flightDiary.concat(data));
         }
-  
+
         setDate('');
         setWeather(null);
         setVisibility(null);
@@ -86,21 +86,77 @@ function App() {
         <h2>Add new entry</h2>
         <p>{errorMessage}</p>
         <form onSubmit={handleAddEntry}>
-          date (yyyy-mm-dd)
-          <input
-            value={date}
-            onChange={(event) => setDate(event.target.value)}
-          /><br />
-          visibility (great, good, ok or poor)
-          <input
-            value={visibility || ''}
-            onChange={(event) => setVisibility(event.target.value as Visibility)}
-          /><br />
-          weather (sunny, rainy, cloudy, stormy or windy)
-          <input
-            value={weather || ''}
-            onChange={(event) => setWeather(event.target.value as Weather)}
-          /><br />
+          <label>
+            Date:
+            <input
+              type="date"
+              value={date}
+              onChange={(event) => setDate(event.target.value)}
+            />
+          </label>
+          <br />
+          <label>
+            Visibility:
+            <input
+              type="radio"
+              value={Visibility.Great}
+              checked={visibility === Visibility.Great}
+              onChange={(event) => setVisibility(Visibility.Great)}
+            /> Great
+            <input
+              type="radio"
+              value={Visibility.Good}
+              checked={visibility === Visibility.Good}
+              onChange={(event) => setVisibility(Visibility.Good)}
+            /> Good
+            <input
+              type="radio"
+              value={Visibility.Ok}
+              checked={visibility === Visibility.Ok}
+              onChange={(event) => setVisibility(Visibility.Ok)}
+            /> Ok
+            <input
+              type="radio"
+              value={Visibility.Poor}
+              checked={visibility === Visibility.Poor}
+              onChange={(event) => setVisibility(Visibility.Poor)}
+            /> Poor
+          </label>
+          <br />
+          <label>
+            Weather:
+            <input
+              type="radio"
+              value={Weather.Sunny}
+              checked={weather === Weather.Sunny}
+              onChange={(event) => setWeather(Weather.Sunny)}
+            /> Sunny
+            <input
+              type="radio"
+              value={Weather.Rainy}
+              checked={weather === Weather.Rainy}
+              onChange={(event) => setWeather(Weather.Rainy)}
+            /> Rainy
+            <input
+              type="radio"
+              value={Weather.Cloudy}
+              checked={weather === Weather.Cloudy}
+              onChange={(event) => setWeather(Weather.Cloudy)}
+            /> Cloudy
+            <input
+              type="radio"
+              value={Weather.Stormy}
+              checked={weather === Weather.Stormy}
+              onChange={(event) => setWeather(Weather.Stormy)}
+            /> Stormy
+            <input
+              type="radio"
+              value={Weather.Windy}
+              checked={weather === Weather.Windy}
+              onChange={(event) => setWeather(Weather.Windy)}
+            /> Windy
+          </label>
+          <br />
           comment
           <input
             value={comment}

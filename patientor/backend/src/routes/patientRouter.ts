@@ -9,17 +9,16 @@ router.get('/', (_req, res) => {
   res.send(patients);
 });
 
-/*router.post('/', (req, res) => {
-  const { name, ssn, dateOfBirth, occupation, gender } = req.body;
-  const addedPatient = patientService.addPatient({
-    name,
-    dateOfBirth,
-    ssn,
-    gender,
-    occupation,
-  });
-  res.json(addedPatient);
-});*/
+router.get('/:id', (req, res) => {
+  const data = patientService.findPatient(req.params.id);
+
+  if (!data) {
+    return res.sendStatus(404);
+  }
+  else {
+    return res.send(data);
+  }
+})
 
 router.post('/', (req, res) => {
   try {

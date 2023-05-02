@@ -12,10 +12,23 @@ export const PatientInformation = ({ patient }: Props) => {
     <div>
       <h2>
         {patient.name} {' '}
-        {patient.gender === 'female' ? <FemaleIcon/> : patient.gender === 'male' ? <MaleIcon /> : <TransgenderIcon />}
+        {patient.gender === 'female' ? <FemaleIcon /> : patient.gender === 'male' ? <MaleIcon /> : <TransgenderIcon />}
       </h2>
       <p>ssn: {patient.ssn}</p>
       <p>occupation: {patient.occupation}</p>
+      <h3>entries</h3>
+      {patient.entries.map((entry) => (
+        <div key={entry.id}>
+          <p>{entry.date} <span style={{ fontStyle: 'italic' }}>{entry.description}</span></p>
+          {entry.diagnosisCodes && (
+            <ul>
+              {entry.diagnosisCodes.map((code) => (
+                <li key={code}>{code}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ))}
     </div>
   )
 };
